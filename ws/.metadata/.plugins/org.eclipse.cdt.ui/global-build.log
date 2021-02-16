@@ -1,0 +1,10 @@
+10:52:51 **** Clean-only build of configuration Debug for project SEcubeDevBoard ****
+make clean 
+Cannot run program "make": Launching failed
+
+Error: Program "make" not found in PATH
+PATH=[C:/ST/STM32CubeIDE_1.5.1/STM32CubeIDE/jre/bin/server;C:/ST/STM32CubeIDE_1.5.1/STM32CubeIDE/jre/bin;C:/ST/STM32CubeIDE_1.5.1/STM32CubeIDE/jre/lib/amd64;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Intel\Shared Files\cpp\bin\Intel64;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\xampp\php;C:\composer;C:\Program Files\dotnet\;C:\Program Files (x86)\Calibre2\;C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;C:\Users\Ramsesse\AppData\Local\Programs\Python\Python38-32\Scripts\;C:\Users\Ramsesse\AppData\Local\Programs\Python\Python38-32\;C:\Users\Ramsesse\AppData\Local\Microsoft\WindowsApps;C:\Users\Ramsesse\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Ramsesse\AppData\Roaming\npm;C:\Users\Ramsesse\AppData\Roaming\Composer\vendor\bin;C:\Users\Ramsesse\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;;C:\ST\STM32CubeIDE_1.5.1\STM32CubeIDE;]
+
+**** Build of configuration Debug for project SEcubeDevBoard ****
+
+Nothing to build for project SEcubeDevBoard

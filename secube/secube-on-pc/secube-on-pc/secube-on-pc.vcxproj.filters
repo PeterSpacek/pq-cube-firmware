@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{87e18791-aad8-44c8-ac9f-d718cace1275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{fc32c494-a588-42d0-897b-0d58ef5f70e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{114a974b-bf51-4b2d-a3eb-6c941cecda42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{824e6c2a-8cb7-4d1b-93eb-d30467c72fe0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="device_main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="stubs.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="tests.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\aes256.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\crc16.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\pbkdf2.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\se3_common.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\sha256.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_algo_Aes.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_algo_aes256hmacsha256.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_algo_AesHmacSha256s.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_algo_HmacSha256.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_cmd.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_cmd0.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_cmd1.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_cmd1_config.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_cmd1_crypto.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_cmd1_keys.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_cmd1_login.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_flash.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_keys.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_memory.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_proto.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3c0.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3c1.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Host\L0.c">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Host\L1.c">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Host\se3comm.c">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Device\se3_algo_sha256.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="device_main.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="stubs.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\aes256.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\crc16.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\pbkdf2.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\se3_common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\se3c0def.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\se3c1def.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\sha256.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_algo_Aes.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_algo_aes256hmacsha256.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_algo_AesHmacSha256s.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_algo_HmacSha256.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_algo_sha256.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_cmd.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_cmd0.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_cmd1.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_cmd1_config.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_cmd1_crypto.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_cmd1_keys.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_cmd1_login.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_flash.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_keys.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_memory.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3_proto.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3c0.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Device\se3c1.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Host\L0.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Host\L1.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Host\se3comm.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

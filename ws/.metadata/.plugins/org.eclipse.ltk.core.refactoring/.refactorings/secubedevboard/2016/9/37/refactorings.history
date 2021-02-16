@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;SEcubeDevBoard/Application/Inc/se3_sdio.h&apos; to &apos;secube_sdio.h&apos;" description="Rename resource &apos;se3_sdio.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Application/Inc/se3_sdio.h" name="secube_sdio.h" stamp="1473985224126" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;SEcubeDevBoard/Application/Src/se3_sdio.c&apos; to &apos;secube_sdio.c&apos;" description="Rename resource &apos;se3_sdio.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Application/Src/se3_sdio.c" name="secube_sdio.c" stamp="1473985701835" updateReferences="true"/>
+</session>

@@ -1,0 +1,109 @@
+/**
+ *  \file se3_cmd.h
+ *  \author Nicola Ferri
+ *  \brief L0 command dispatch and execute
+ */
+
+#pragma once
+
+#include "se3c1.h"
+#include "se3c0.h"
+
+
+typedef struct SE3_L1_GLOBALS_ {
+    SE3_LOGIN_STATUS login;
+    SE3_RECORD_INFO records[SE3_RECORD_MAX];
+    se3_mem sessions;
+    uint16_t sessions_algo[SE3_SESSIONS_MAX];
+} SE3_L1_GLOBALS;
+
+
+/** \brief Execute received command
+ *  
+ *  Process the last received request and produce a response
+ */
+void se3_cmd_execute();
+
+
+/** \brief L0 ECHO command handler
+ *
+ *  Send back received data
+ */
+uint16_t L0d_echo(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L0 FACTORY_INIT command handler
+ *
+ *  Initialize device's serial number
+ */
+uint16_t L0d_factory_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+
+/** \brief L0 FACTORY_INIT command handler
+ *
+ *  Reset USEcube to boot mode
+ */
+uint16_t L0d_bootmode_reset(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+
+static uint16_t L1d_error(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+uint16_t L0d_cmd1(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+uint16_t L1d_config(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+
+/** \brief L1 CRYPTO_INIT handler
+ *
+ *  Initialize a cryptographic context
+ */
+uint16_t L1d_crypto_init(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 CRYPTO_UPDATE handler
+ *
+ *  Use a cryptographic context
+ */
+uint16_t L1d_crypto_update(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 CRYPTO_SET_TIME handler
+ *
+ *  Set device time for key validity
+ */
+uint16_t L1d_crypto_set_time(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 CRYPTO_SET_TIME handler
+ *
+ *  Get list of available algorithms
+ */
+uint16_t L1d_crypto_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 KEY_EDIT
+ *
+ *  Insert, delete or update a key
+ */
+uint16_t L1d_key_edit(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 KEY_LIST
+ *
+ *  Get a list of keys in the device
+ */
+uint16_t L1d_key_list(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+
+/** \brief L1 CHALLENGE command handler
+ *
+ *  Get a login challenge from the device
+ */
+uint16_t L1d_challenge(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 LOGIN command handler
+ *
+ *  Respond to challenge and complete the login
+ */
+uint16_t L1d_login(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+
+/** \brief L1 LOGOUT command handler
+ *
+ *  Log out and release resources
+ */
+uint16_t L1d_logout(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
+

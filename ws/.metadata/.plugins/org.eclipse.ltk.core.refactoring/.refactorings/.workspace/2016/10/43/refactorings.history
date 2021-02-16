@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;SEcubeDevBoard/Application/Inc/Common/se3_algo_aes256cbchmacsha256sess.h&apos;" deleteContents="false" description="Delete resource &apos;SEcubeDevBoard/Application/Inc/Common/se3_algo_aes256cbchmacsha256sess.h&apos;" element1="/SEcubeDevBoard/Application/Inc/Common/se3_algo_aes256cbchmacsha256sess.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1477056767387"/>
+</session>

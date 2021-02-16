@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="secube">
+      <UniqueIdentifier>{9ce5f737-d669-4216-9199-0c2d8a93049a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="test_AesHmacSha256s.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="test_Aes.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="test_HmacSha256.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="test_Sha256.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="test_echo.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="tests.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Host\L0.c">
+      <Filter>secube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Host\L1.c">
+      <Filter>secube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Host\se3comm.c">
+      <Filter>secube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\aes256.c">
+      <Filter>secube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\crc16.c">
+      <Filter>secube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\pbkdf2.c">
+      <Filter>secube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\se3_common.c">
+      <Filter>secube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Common\sha256.c">
+      <Filter>secube</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tests.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Host\L0.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Host\L1.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Host\se3comm.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\aes256.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\crc16.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\pbkdf2.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\se3_common.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\se3c0def.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\se3c1def.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\sha256.h">
+      <Filter>secube</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
