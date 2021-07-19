@@ -11,13 +11,8 @@
 #include "crc16.h"
 #include "se3_rand.h"
 
-
-
-
 #define SE3_FLASH_SIGNATURE_ADDR  ((uint32_t)0x08020000)
 #define SE3_FLASH_SIGNATURE_SIZE  ((size_t)0x40)
-
-
 
 uint8_t se3_sessions_buf[SE3_SESSIONS_BUF];
 uint8_t* se3_sessions_index[SE3_SESSIONS_MAX];

@@ -68,10 +68,8 @@ uint16_t se3_algo_Aes_update(
     uint16_t datain2_len, const uint8_t* datain2,
     uint16_t* dataout_len, uint8_t* dataout)
 {
-	SE3_TRACE(("[algo_aes256.update] OKOKOK \n"));
     B5_tAesCtx* aes = (B5_tAesCtx*)ctx;
     size_t nblocks = 0;
-    size_t n_ass_blocks = 0;
     uint8_t *data_ass, *data_enc, *data_dec;
     bool do_setiv = false;
     bool do_update = false;
@@ -83,20 +81,20 @@ uint16_t se3_algo_Aes_update(
 	do_finit = flags & SE3_CRYPTO_FLAG_FINIT;
 
     // check params
-	if (do_setiv && (datain1_len != B5_AES_BLK_SIZE)) {
+	if (do_setiv && (datain1_len < B5_AES_BLK_SIZE)) {
 		SE3_TRACE(("[algo_aes256.update] invalid IV size\n"));
 		return SE3_ERR_PARAMS;
 	}
-    if (do_update) {
-        if (datain0_len % B5_AES_BLK_SIZE != 0) {
-            SE3_TRACE(("[algo_aes256.update] associated data size not a multiple of block size\n"));
-            return SE3_ERR_PARAMS;
-        }
-        if (datain2_len % B5_AES_BLK_SIZE != 0) {
-            SE3_TRACE(("[algo_aes256.update] data size not a multiple of block size\n"));
-            return SE3_ERR_PARAMS;
-        }
-    }
+//    if (do_update) {
+//        if (datain0_len % B5_AES_BLK_SIZE != 0) {
+//            SE3_TRACE(("[algo_aes256.update] associated data size not a multiple of block size\n"));
+//            return SE3_ERR_PARAMS;
+//        }
+   //     if (datain2_len % B5_AES_BLK_SIZE != 0) {
+    //        SE3_TRACE(("[algo_aes256.update] data size not a multiple of block size\n"));
+     //       return SE3_ERR_PARAMS;
+      //  }
+    //}
 
 
     if (do_setiv) {
@@ -109,8 +107,7 @@ uint16_t se3_algo_Aes_update(
 
     if (do_update) {
         // update
-		nblocks = datain2_len / B5_AES_BLK_SIZE;
-		n_ass_blocks = datain0_len / B5_AES_BLK_SIZE;
+    	nblocks = (datain2_len / B5_AES_BLK_SIZE);
         switch (aes->mode) {
         case B5_AES256_ECB_DEC:
         case B5_AES256_CBC_DEC:
@@ -123,12 +120,14 @@ uint16_t se3_algo_Aes_update(
         	data_ass = (uint8_t*)datain0;
             data_enc = (uint8_t*)datain2;
             data_dec = dataout;
+        	nblocks = datain2_len;
             *dataout_len = datain2_len-B5_AES_BLK_SIZE;
             break;
         case B5_AES256_GCM_ENC:
         	data_ass = (uint8_t*)datain0;
             data_enc = dataout;
             data_dec = (uint8_t*)datain2;
+        	nblocks = datain2_len;
             *dataout_len = datain2_len+B5_AES_BLK_SIZE;
             break;
         case B5_AES256_ECB_ENC:
@@ -143,7 +142,7 @@ uint16_t se3_algo_Aes_update(
             break;
         }
 
-        if (B5_AES256_RES_OK != B5_Aes256_Update(aes, data_ass, data_enc, data_dec, (int16_t) n_ass_blocks,  (int16_t)nblocks)) {
+        if (B5_AES256_RES_OK != B5_Aes256_Update(aes, data_ass, data_enc, data_dec, datain0_len,  (int16_t)nblocks)) {
             SE3_TRACE(("[algo_aes256.update] B5_Aes256_Update failed\n"));
             return SE3_ERR_HW;
         }

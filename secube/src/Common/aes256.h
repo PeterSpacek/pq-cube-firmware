@@ -43,6 +43,7 @@ extern "C" {
 #define B5_AES_192              24  /**< Key Size in Bytes. */
 #define B5_AES_128              16  /**< Key Size in Bytes. */
 #define B5_AES_IV_SIZE          16  /**< IV Size in Bytes. */
+#define B5_TLS_AES_IV_SIZE      16  /**< IV Size in Bytes. */
 #define B5_AES_BLK_SIZE         16  /**< Block Size in Bytes. */
 ///@}
 /** @} */

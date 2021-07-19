@@ -10,8 +10,8 @@
 #include "pbkdf2.h"
 #define SE3_TYPE_KEY 100
 
-//#define SE3_KEYPAIR_ID_OFFSET 65536
-#define SE3_KEYPAIR_ID_OFFSET 5
+#define SE3_KEYPAIR_ID_OFFSET 32768
+#define SE3_KEYS_ID_OFFSET 65536
 
 /** \brief Flash key structure
  *  

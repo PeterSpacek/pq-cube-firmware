@@ -1,7 +1,7 @@
 /**
  *  \file se3_security_core.c
  *  \author Nicola Ferri
- *  \co-author Filippo Cottone, Pietro Scandale, Francesco Vaiana, Luca Di Grazia
+ *  \co-author Filippo Cottone, Pietro Scandale, Francesco Vaiana, Luca Di Grazia, Peter Spacek
  *  \brief Security core
  */
 
@@ -13,14 +13,75 @@
 #include "se3_algo_AesHmacSha256s.h"
 #include "se3_algo_aes256hmacsha256.h"
 
+#include "../../../ws/secubedevboard/Application/src/Device/pq-crypto/crypto_kem/kyber1024/kyber_api.h"
+#include "../../../ws/secubedevboard/Application/src/Device/pq-crypto/crypto_kem/kyber1024-m4/kyber_m4_api.h"
+#include "../../../ws/secubedevboard/Application/src/Device/pq-crypto/crypto_kem/kyber1024-m4-protected/kyber_m4_api_prot.h"
 
-#include "api.h"
+#include "../../../ws/secubedevboard/Application/src/Device/pq-crypto/crypto_kem/ntruhps4096821/ntruhps4096821_api.h"
+#include "../../../ws/secubedevboard/Application/src/Device/pq-crypto/crypto_kem/ntruhps4096821-m4/ntruhps4096821_m4_api.h"
+
+#include "../../../ws/secubedevboard/Application/src/Device/pq-crypto/crypto_kem/firesaber/firesaber_api.h"
+#include "../../../ws/secubedevboard/Application/src/Device/pq-crypto/crypto_kem/saber-m4/saber_m4_api.h"
+
+uint32_t m_nStart;               //DEBUG Stopwatch start cycle counter value
+uint32_t m_nStop;                //DEBUG Stopwatch stop cycle counter value
 
 se3_kem_descriptor kem_table[SE3_KEM_ALGO_MAX] = {
-		{ NULL, NULL, 0, "", 0, 0, 0 },///< Classic McEliece
-		{ NULL, NULL, 0, "", 0, 0, 0 },///< CRYSTALS-KYBER
-		{ NULL, NULL, 0, "", 0, 0, 0 }, ///< NTRU
-
+		{ ///< CRYSTALS-KYBER
+			KYBER1024_M4_crypto_kem_keypair_prot,
+			KYBER1024_M4_crypto_kem_enc_prot,
+			KYBER1024_M4_crypto_kem_dec_prot,
+			KYBER1024_M4_CRYPTO_ALGNAME_prot,
+			SE3_CRYPTO_TYPE_KEM,
+			KYBER1024_M4_CRYPTO_BYTES_prot,
+			KYBER1024_M4_CRYPTO_CIPHERTEXTBYTES_prot,
+			KYBER1024_M4_CRYPTO_PUBLICKEYBYTES_prot,
+			KYBER1024_M4_CRYPTO_SECRETKEYBYTES_prot
+		},
+		{ ///< CRYSTALS-KYBER
+			PQCLEAN_KYBER1024_CLEAN_crypto_kem_keypair,
+			PQCLEAN_KYBER1024_CLEAN_crypto_kem_enc,
+			PQCLEAN_KYBER1024_CLEAN_crypto_kem_dec,
+			PQCLEAN_KYBER1024_CLEAN_CRYPTO_ALGNAME,
+			SE3_CRYPTO_TYPE_KEM,
+			PQCLEAN_KYBER1024_CLEAN_CRYPTO_BYTES,
+			PQCLEAN_KYBER1024_CLEAN_CRYPTO_CIPHERTEXTBYTES,
+			PQCLEAN_KYBER1024_CLEAN_CRYPTO_PUBLICKEYBYTES,
+			PQCLEAN_KYBER1024_CLEAN_CRYPTO_SECRETKEYBYTES
+		},
+		{ ///< CRYSTALS-KYBER
+			KYBER1024_M4_crypto_kem_keypair,
+			KYBER1024_M4_crypto_kem_enc,
+			KYBER1024_M4_crypto_kem_dec,
+			KYBER1024_M4_CRYPTO_ALGNAME,
+			SE3_CRYPTO_TYPE_KEM,
+			KYBER1024_M4_CRYPTO_BYTES,
+			KYBER1024_M4_CRYPTO_CIPHERTEXTBYTES,
+			KYBER1024_M4_CRYPTO_PUBLICKEYBYTES,
+			KYBER1024_M4_CRYPTO_SECRETKEYBYTES
+		},
+		{ ///< NTRU
+			PQCLEAN_NTRUHPS4096821_CLEAN_crypto_kem_keypair,
+			PQCLEAN_NTRUHPS4096821_CLEAN_crypto_kem_enc,
+			PQCLEAN_NTRUHPS4096821_CLEAN_crypto_kem_dec,
+			PQCLEAN_NTRUHPS4096821_CLEAN_CRYPTO_ALGNAME,
+			SE3_CRYPTO_TYPE_KEM,
+			PQCLEAN_NTRUHPS4096821_CLEAN_CRYPTO_BYTES,
+			PQCLEAN_NTRUHPS4096821_CLEAN_CRYPTO_CIPHERTEXTBYTES,
+			PQCLEAN_NTRUHPS4096821_CLEAN_CRYPTO_PUBLICKEYBYTES,
+			PQCLEAN_NTRUHPS4096821_CLEAN_CRYPTO_SECRETKEYBYTES
+		},
+		{ ///< NTRU
+			NTRUHPS4096821_M4_crypto_kem_keypair,
+			NTRUHPS4096821_M4_crypto_kem_enc,
+			NTRUHPS4096821_M4_crypto_kem_dec,
+			NTRUHPS4096821_M4_CRYPTO_ALGNAME,
+			SE3_CRYPTO_TYPE_KEM,
+			NTRUHPS4096821_M4_CRYPTO_BYTES,
+			NTRUHPS4096821_M4_CRYPTO_CIPHERTEXTBYTES,
+			NTRUHPS4096821_M4_CRYPTO_PUBLICKEYBYTES,
+			NTRUHPS4096821_M4_CRYPTO_SECRETKEYBYTES
+		},
 		{ ///< FIRESABER
 			PQCLEAN_FIRESABER_CLEAN_crypto_kem_keypair,
 			PQCLEAN_FIRESABER_CLEAN_crypto_kem_enc,
@@ -30,7 +91,20 @@ se3_kem_descriptor kem_table[SE3_KEM_ALGO_MAX] = {
 			PQCLEAN_FIRESABER_CLEAN_CRYPTO_BYTES,
 			PQCLEAN_FIRESABER_CLEAN_CRYPTO_CIPHERTEXTBYTES,
 			PQCLEAN_FIRESABER_CLEAN_CRYPTO_PUBLICKEYBYTES,
-			PQCLEAN_FIRESABER_CLEAN_CRYPTO_SECRETKEYBYTES }
+			PQCLEAN_FIRESABER_CLEAN_CRYPTO_SECRETKEYBYTES
+		},
+		{ ///< FIRESABER
+			SABER_M4_crypto_kem_keypair,
+			SABER_M4_crypto_kem_enc,
+			SABER_M4_crypto_kem_dec,
+			SABER_M4_CRYPTO_ALGNAME,
+			SE3_CRYPTO_TYPE_KEM,
+			SABER_M4_CRYPTO_BYTES,
+			SABER_M4_CRYPTO_CIPHERTEXTBYTES,
+			SABER_M4_CRYPTO_PUBLICKEYBYTES,
+			SABER_M4_CRYPTO_SECRETKEYBYTES
+		},
+		{ NULL, NULL, NULL, "", 0, 0, 0, 0 }
 	};
 
 /* Cryptographic algorithms handlers and display info for the security core ONLY. */
@@ -167,10 +241,192 @@ char* concat(char *s1, char *s2)
     return result;
 }
 
-/** \brief initialize a crypto context
- *
- *  crypto_init : (algo:ui16, mode:ui16, key_id:ui32) => (sid:ui32)
- */
+
+static inline void stopwatch_reset(void)
+{
+    /* Enable DWT */
+    DEMCR |= DEMCR_TRCENA;
+    *DWT_CYCCNT = 0;
+    /* Enable CPU cycle counter */
+    DWT_CTRL |= CYCCNTENA;
+}
+
+uint16_t test_implementations_get_data(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+{
+
+    struct {
+        uint32_t num_of_alg;
+    } resp_params;
+
+    uint32_t status,var;
+
+    if (*(req+SE3_CMD1_TEST_IMPLEMENTATIONS_REQ) != SE3_OK) {
+        return SE3_ERR_PARAMS;
+    }
+
+    *resp_size=4;
+
+    resp_params.num_of_alg=SE3_KEM_ALGO_MAX;
+    SE3_SET32(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO,  resp_params.num_of_alg);
+
+    se3_flash_key key;
+    se3_flash_it it = { .addr = NULL };
+
+    key.id = TEST_ID;
+    key.data=malloc(SE3_KEM_ALGO_MAX*3*sizeof(uint32_t));
+
+    se3_flash_it_init(&it);
+    if (!se3_key_find(key.id, &it)) {
+    	            it.addr = NULL;
+    	            SE3_TRACE(("[crypto_kem_dec] key not found\n"));
+    	            return SE3_ERR_RESOURCE;
+    	        }
+   se3_key_read(&it, &key);
+
+
+    uint64_t * data;
+    data=(uint64_t *)key.data;
+
+    for (var = 1; var < SE3_KEM_ALGO_MAX-1; var++) {
+        SE3_SET32(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + (*resp_size), var);
+        (*resp_size)+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_ID_SIZE;
+        memcpy(resp + SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + (*resp_size),  kem_table[var].display_name, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_NAME_SIZE);
+        (*resp_size)+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_NAME_SIZE;
+
+
+        SE3_SET64(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + (*resp_size), data[var*3+0]);
+        (*resp_size)+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_TIMER_SIZE;
+
+        SE3_SET64(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + (*resp_size), data[var*3+1]);
+        (*resp_size)+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_TIMER_SIZE;
+
+        SE3_SET64(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + (*resp_size), data[var*3+2]);
+        (*resp_size)+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_TIMER_SIZE;
+
+	}
+    free(key.data);
+	return SE3_OK;
+}
+
+uint16_t test_implementations_write_data(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
+{
+    struct {
+        uint32_t num_of_alg;
+    } resp_params;
+
+    uint32_t status,var;
+
+    if (*(req+SE3_CMD1_TEST_IMPLEMENTATIONS_REQ) != SE3_OK) {
+        return SE3_ERR_PARAMS;
+    }
+
+    *resp_size=4;
+    resp_params.num_of_alg=SE3_KEM_ALGO_MAX;
+    SE3_SET32(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO,  resp_params.num_of_alg);
+
+    uint32_t max_ciphertext_size;
+    uint32_t max_public_key_size;
+    uint32_t max_secret_key_size;
+    uint32_t max_size;
+    max_sizes(&max_ciphertext_size,&max_public_key_size,&max_secret_key_size,&max_size);
+
+    uint8_t* ciphertext= malloc(max_ciphertext_size);
+    uint8_t* public_key= malloc(max_public_key_size);
+    uint8_t* secret_key= malloc(max_secret_key_size);
+    uint8_t* symmetric_key= malloc(max_size);
+    uint8_t* symmetric_key2= malloc(max_size);
+
+    uint32_t timer;
+
+    for (var = 0; var < SE3_KEM_ALGO_MAX-1; var++) {
+        SE3_SET32(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + *resp_size, var);
+        *resp_size+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_ID_SIZE;
+        memcpy(resp + SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + *resp_size,  kem_table[var].display_name, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_NAME_SIZE);
+        *resp_size+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_NAME_SIZE;
+
+    	timer=0;
+        for(int i =0;i<NUM_OF_TESTS;i++){
+			stopwatch_reset();
+			__disable_irq();
+			STOPWATCH_START;
+			status = kem_table[var].keypair(public_key,secret_key);
+			STOPWATCH_STOP;
+			__enable_irq();
+			timer += m_nStop - m_nStart;
+	        if (SE3_OK != status) {
+	            free(ciphertext);
+	            free(public_key);
+	            free(secret_key);
+	            free(symmetric_key);
+	            free(symmetric_key2);
+	            return status;
+	        }
+        }
+        timer/=NUM_OF_TESTS;
+
+
+        SE3_SET32(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + *resp_size, timer);
+        *resp_size+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_TIMER_SIZE;
+
+    	timer=0;
+        for(int i =0;i<NUM_OF_TESTS;i++){
+			stopwatch_reset();
+			//__disable_irq();
+			STOPWATCH_START;
+			status = kem_table[var].enc(ciphertext, symmetric_key, public_key);
+			STOPWATCH_STOP;
+			//__enable_irq();
+			timer += m_nStop - m_nStart;
+	        if (SE3_OK != status) {
+	            free(ciphertext);
+	            free(public_key);
+	            free(secret_key);
+	            free(symmetric_key);
+	            free(symmetric_key2);
+	        }
+		}
+		timer/=NUM_OF_TESTS;
+
+        SE3_SET32(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + *resp_size, timer);
+        *resp_size+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_TIMER_SIZE;
+
+    	timer=0;
+        for(int i =0;i<NUM_OF_TESTS;i++){
+			stopwatch_reset();
+			//__disable_irq();
+			STOPWATCH_START;
+			status = kem_table[var].dec(symmetric_key2, ciphertext, secret_key);
+			STOPWATCH_STOP;
+			//__enable_irq();
+			timer += m_nStop - m_nStart;
+	        if (SE3_OK != status) {
+	            free(ciphertext);
+	            free(public_key);
+	            free(secret_key);
+	            free(symmetric_key);
+	            free(symmetric_key2);
+	            return status;
+	        }
+		}
+		timer/=NUM_OF_TESTS;
+
+        SE3_SET32(resp, SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_NUM_OF_ALGO + *resp_size, timer);
+        *resp_size+=SE3_CMD1_TEST_IMPLEMENTATIONS_RESP_ALGO_TIMER_SIZE;
+
+    	/* Compare plain data with decrypted data */
+    	if (memcmp(symmetric_key, symmetric_key2, kem_table[var].display_size)!= 0) {
+            return SE3_ERR_STATE;
+    	}
+	}
+
+    free(ciphertext);
+    free(public_key);
+    free(secret_key);
+    free(symmetric_key);
+    free(symmetric_key2);
+	return status;
+}
+
 uint16_t crypto_kem_keypair(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp)
 {
     struct {
@@ -206,7 +462,6 @@ uint16_t crypto_kem_keypair(uint16_t req_size, const uint8_t* req, uint16_t* res
         return SE3_ERR_PARAMS;
     }
 
-
     pk.data=resp+SE3_CMD1_CRYPTO_KEM_KEYPAIR_RESP_OFF_PK_DATA;
     sk.data=malloc(kem_table[req_params.algo].display_secret_key_size);
     status = handler(pk.data, sk.data);
@@ -233,8 +488,9 @@ uint16_t crypto_kem_keypair(uint16_t req_size, const uint8_t* req, uint16_t* res
             it.addr = NULL;
         }
         else {
-            SE3_TRACE(("[crypto_kem_keypair] public key cannot be written \n"));
-            return SE3_ERR_RESOURCE;
+    		if (!se3_flash_it_delete(&it))
+    			return SE3_ERR_HW;
+    		it.addr = NULL;
         }
         if (!se3_key_new(&it, &pk)) {
             SE3_TRACE(("[crypto_kem_keypair] pk se3_key_new failed\n"));
@@ -244,8 +500,9 @@ uint16_t crypto_kem_keypair(uint16_t req_size, const uint8_t* req, uint16_t* res
             it.addr = NULL;
         }
         else{
-            SE3_TRACE(("[crypto_kem_keypair] secret key cannot be written \n"));
-            return SE3_ERR_RESOURCE;
+    		if (!se3_flash_it_delete(&it))
+    			return SE3_ERR_HW;
+    		it.addr = NULL;
         }
         if (!se3_key_new(&it, &sk)) {
             SE3_TRACE(("[crypto_kem_keypair] sk se3_key_new failed\n"));
@@ -253,8 +510,7 @@ uint16_t crypto_kem_keypair(uint16_t req_size, const uint8_t* req, uint16_t* res
         }
     }
 
-
-    SE3_SET32(resp, SE3_CMD1_CRYPTO_KEM_KEYPAIR_RESP_OFF_PK_LEN, pk.data_size);
+    SE3_SET16(resp, SE3_CMD1_CRYPTO_KEM_KEYPAIR_RESP_OFF_PK_LEN, pk.data_size);
     *resp_size = SE3_CMD1_CRYPTO_KEM_KEYPAIR_RESP_OFF_PK_DATA+pk.data_size;
     free(sk.data);
     free(sk.name);
@@ -262,6 +518,160 @@ uint16_t crypto_kem_keypair(uint16_t req_size, const uint8_t* req, uint16_t* res
 
 	return status;
 }
+
+
+uint16_t derive_and_store_keys(se3_flash_key * pms,
+		uint8_t salt_len,
+		const uint8_t* salt,
+		uint32_t ms_id,
+		uint32_t cs_id,
+		uint32_t ss_id,
+		uint32_t validity,
+		uint16_t algo){
+
+    se3_flash_it it = { .addr = NULL };
+    se3_flash_key ms;
+    se3_flash_key cs;
+    se3_flash_key ss;
+	ms.name = concat(kem_table[algo].display_name, ", master secret");
+	cs.name = concat(kem_table[algo].display_name, ", client secret");
+	ss.name = concat(kem_table[algo].display_name, ", server secret");
+    ms.id =  ms_id;
+    cs.id =  cs_id;
+    ss.id =  ss_id;
+    ss.validity = validity;
+    cs.validity = validity;
+    ms.validity = validity;
+    ss.name_size = strlen(ss.name);
+    cs.name_size = strlen(cs.name);
+    ms.name_size = strlen(ms.name);
+    ms.data_size=48;
+    cs.data_size=32;
+    ss.data_size=32;
+    ms.data=malloc(ms.data_size);
+    cs.data=malloc(cs.data_size);
+    ss.data=malloc(ss.data_size);
+
+	PBKDF2HmacSha256(pms->data, pms->data_size, salt, salt_len, 100, ms.data, ms.data_size);
+	PBKDF2HmacSha256(ms.data, ms.data_size, salt, salt_len, 100, cs.data, cs.data_size);
+	PBKDF2HmacSha256(ms.data, ms.data_size, salt, salt_len, 100, ss.data, ss.data_size);
+
+    if (ms.id == SE3_KEY_INVALID) {
+        memset(ms.data, 0, SE3_KEY_DATA_MAX);
+        memset(ss.data, 0, SE3_KEY_DATA_MAX);
+        memset(cs.data, 0, SE3_KEY_DATA_MAX);
+    }
+
+
+    else {
+        se3_flash_it_init(&it);
+        if (!se3_key_find(ms.id, &it)) {
+            it.addr = NULL;
+        }
+        else {
+    		if (!se3_flash_it_delete(&it))
+    			return SE3_ERR_HW;
+    		it.addr = NULL;
+        }
+        if (!se3_key_new(&it, &ms)) {
+            SE3_TRACE(("[derive and store keys] mk se3_key_new failed\n"));
+            return SE3_ERR_MEMORY;
+        }
+        if (!se3_key_find(cs.id, &it)) {
+            it.addr = NULL;
+        }
+        else{
+    		if (!se3_flash_it_delete(&it))
+    			return SE3_ERR_HW;
+    		it.addr = NULL;
+        }
+        if (!se3_key_new(&it, &cs)) {
+            SE3_TRACE(("[derive and store keys] ck se3_key_new failed\n"));
+            return SE3_ERR_MEMORY;
+        }
+        if (!se3_key_find(ss.id, &it)) {
+            it.addr = NULL;
+        }
+        else{
+    		if (!se3_flash_it_delete(&it))
+    			return SE3_ERR_HW;
+    		it.addr = NULL;
+        }
+        if (!se3_key_new(&it, &ss)) {
+            SE3_TRACE(("[derive and store keys] sk se3_key_new failed\n"));
+            return SE3_ERR_MEMORY;
+        }
+    }
+
+}
+
+uint16_t crypto_kem_enc(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp){
+    struct {
+        uint16_t algo;
+        uint32_t pk_len;
+        const uint8_t* pk;
+        uint32_t validity;
+        uint32_t ms_id;
+        uint32_t cs_id;
+        uint32_t ss_id;
+        const uint8_t* crsr;
+    } req_params;
+    struct {
+        uint32_t ct_len;
+        uint8_t* ct;
+
+    } resp_params;
+
+    se3_crypto_kem_enc_handler handler = NULL;
+    uint32_t status;
+
+    if (req_size < SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_PK_DATA) {
+        SE3_TRACE(("[crypto_kem_enc] req size mismatch\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+    SE3_GET16(req, SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_ALGORITHM, req_params.algo);
+    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_PK_LEN, req_params.pk_len);
+    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_VAL, req_params.validity);
+    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_MS_ID, req_params.ms_id);
+    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_CS_ID, req_params.cs_id);
+    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_SS_ID, req_params.ss_id);
+    req_params.crsr = req + SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_CRSR_DATA;
+    req_params.pk = req + SE3_CMD1_CRYPTO_KEM_ENC_REQ_OFF_PK_DATA;
+
+    if (req_params.algo < SE3_KEM_ALGO_MAX) {
+        handler = kem_table[req_params.algo].enc;
+    }
+    if (handler == NULL) {
+        SE3_TRACE(("[crypto_kem_enc] algo not found\n"));
+        return SE3_ERR_PARAMS;
+    }
+
+	resp_params.ct_len=kem_table[req_params.algo].display_ciphertext_size;
+	resp_params.ct=resp+SE3_CMD1_CRYPTO_KEM_ENC_RESP_OFF_DATA;
+
+    se3_flash_key pms;
+	pms.data_size=kem_table[req_params.algo].display_size;
+    pms.data=malloc(pms.data_size);
+    status = handler(resp_params.ct, pms.data, req_params.pk);
+
+    derive_and_store_keys(&pms,
+    		64,
+			req_params.crsr,
+			req_params.ms_id,
+			req_params.cs_id,
+			req_params.ss_id,
+			req_params.validity,
+			req_params.algo);
+
+    free(pms.data);
+    SE3_SET32(resp, SE3_CMD1_CRYPTO_KEM_ENC_RESP_OFF_CT_LEN, resp_params.ct_len);
+    *resp_size = SE3_CMD1_CRYPTO_KEM_ENC_RESP_OFF_DATA+resp_params.ct_len;
+
+    return status;
+}
+
+/* Returns a secret
 uint16_t crypto_kem_enc(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp){
     struct {
         uint16_t algo;
@@ -352,9 +762,8 @@ uint16_t crypto_kem_dec(uint16_t req_size, const uint8_t* req, uint16_t* resp_si
 	    se3_flash_key key;
 	    se3_flash_it it = { .addr = NULL };
 
-	    key.name = NULL;
 	    key.id = SE3_KEYPAIR_ID_OFFSET  + 2 * req_params.sk_id;
-
+	    key.data=malloc(kem_table[req_params.algo].display_secret_key_size);
 	    if (key.id == SE3_KEY_INVALID) {
             SE3_TRACE(("[crypto_kem_dec] key id invalid\n"));
 	        return SE3_ERR_PARAMS;
@@ -379,9 +788,97 @@ uint16_t crypto_kem_dec(uint16_t req_size, const uint8_t* req, uint16_t* resp_si
 	    SE3_SET32(resp, SE3_CMD1_CRYPTO_KEM_DEC_RESP_OFF_SS_LEN, resp_params.ss_len);
 
 	    *resp_size = SE3_CMD1_CRYPTO_KEM_DEC_RESP_OFF_SS_DATA+resp_params.ss_len;
-
+	    free(key.data);
 	    return status;
 }
+*/
+uint16_t crypto_kem_dec(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp){
+	struct {
+	        uint16_t algo;
+	        uint32_t sk_id;
+	        uint32_t ct_len;
+	        const uint8_t* ct;
+	        uint32_t validity;
+	        uint32_t ms_id;
+	        uint32_t cs_id;
+	        uint32_t ss_id;
+	        const uint8_t* crsr;
+	    } req_params;
+	    struct {
+	    } resp_params;
+
+	    se3_crypto_kem_enc_handler handler = NULL;
+	    uint32_t status;
+
+	    if (req_size < SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_CT_DATA) {
+	        SE3_TRACE(("[crypto_kem_dec] req size mismatch\n"));
+	        return SE3_ERR_PARAMS;
+	    }
+
+	    SE3_GET16(req, SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_ALGORITHM, req_params.algo);
+	    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_SK_ID, req_params.sk_id);
+	    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_CT_LEN, req_params.ct_len);
+
+	    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_VAL, req_params.validity);
+	    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_MS_ID, req_params.ms_id);
+	    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_CS_ID, req_params.cs_id);
+	    SE3_GET32(req, SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_SS_ID, req_params.ss_id);
+	    req_params.crsr = req + SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_CRSR_DATA;
+	    req_params.ct = req + SE3_CMD1_CRYPTO_KEM_DEC_REQ_OFF_CT_DATA;
+
+
+	    if (req_params.algo < SE3_KEM_ALGO_MAX) {
+	        handler = kem_table[req_params.algo].dec;
+	    }
+	    if (handler == NULL) {
+	        SE3_TRACE(("[crypto_kem_dec] algo not found\n"));
+	        return SE3_ERR_PARAMS;
+	    }
+
+
+	    se3_flash_key key;
+	    se3_flash_it it = { .addr = NULL };
+
+	    key.id = SE3_KEYPAIR_ID_OFFSET  + 2 * req_params.sk_id;
+	    key.data=malloc(kem_table[req_params.algo].display_secret_key_size);
+	    if (key.id == SE3_KEY_INVALID) {
+            SE3_TRACE(("[crypto_kem_dec] key id invalid\n"));
+	        return SE3_ERR_PARAMS;
+	    }
+	    else {
+	        se3_flash_it_init(&it);
+	        if (!se3_key_find(key.id, &it)) {
+	            it.addr = NULL;
+	            SE3_TRACE(("[crypto_kem_dec] key not found\n"));
+	            return SE3_ERR_RESOURCE;
+	        }
+	        se3_key_read(&it, &key);
+
+			if (key.validity < se3_time_get() || !(get_now_initialized())) {
+				SE3_TRACE(("[crypto_kem_dec] key expired\n"));
+				return SE3_ERR_EXPIRED;
+			}
+	    }
+	    se3_flash_key pms;
+		pms.data_size=kem_table[req_params.algo].display_size;
+	    pms.data=malloc(pms.data_size);
+
+	    status = handler(pms.data, req_params.ct, key.data);
+
+	    derive_and_store_keys(&pms,
+	    		64,
+				req_params.crsr,
+				req_params.ms_id,
+				req_params.cs_id,
+				req_params.ss_id,
+				req_params.validity,
+				req_params.algo);
+
+	    free(pms.data);
+	    free(key.data);
+	    return status;
+}
+
 
 /** \brief initialize a crypto context
  *

@@ -354,6 +354,7 @@ bool se3_flash_it_new(se3_flash_it* it, uint8_t type, uint16_t size)
 
 bool se3_flash_pos_delete(size_t pos)
 {
+
 	size_t pos2, blocks;
 	if (pos >= SE3_FLASH_INDEX_SIZE)return false;
 	pos2 = pos + 1;

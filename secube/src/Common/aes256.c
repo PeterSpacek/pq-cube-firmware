@@ -1474,7 +1474,7 @@ uint8_t gmac(B5_tAesCtx *ctx, const uint8_t *iv, size_t iv_len, const uint8_t *a
 
 uint8_t aes_gcm_enc(B5_tAesCtx	*ctx, const uint8_t *iv, size_t iv_len, const uint8_t *plain,
 		size_t plain_len, const uint8_t *aad, size_t aad_len, uint8_t *crypt){
-	gcm_ae(ctx, iv, iv_len, plain, plain_len, aad, aad_len, crypt, crypt+plain_len);
+	return gcm_ae(ctx, iv, iv_len, plain, plain_len, aad, aad_len, crypt, crypt+plain_len);
 }
 
 uint8_t aes_gcm_dec(B5_tAesCtx	*ctx, const uint8_t *iv, size_t iv_len, const uint8_t *crypt,
@@ -1561,8 +1561,11 @@ int32_t B5_Aes256_SetIV (B5_tAesCtx    *ctx, const uint8_t *IV)
          (ctx->mode != B5_AES256_CFB_ENC) &&  (ctx->mode != B5_AES256_CFB_DEC))    
         return B5_AES256_RES_INVALID_MODE; 
     
-    memcpy(ctx->InitVector, IV, B5_AES_IV_SIZE);
     
+    if ( (ctx->mode != B5_AES256_GCM_ENC) && (ctx->mode != B5_AES256_GCM_DEC))
+    	memcpy(ctx->InitVector, IV, B5_AES_IV_SIZE);
+    else
+    	memcpy(ctx->InitVector, IV, B5_TLS_AES_IV_SIZE);
     return B5_AES256_RES_OK;
 }
 
@@ -1570,7 +1573,7 @@ int32_t B5_Aes256_SetIV (B5_tAesCtx    *ctx, const uint8_t *IV)
 
 
 
-int32_t B5_Aes256_Update (B5_tAesCtx	*ctx, uint8_t *assData, uint8_t *encData, uint8_t *clrData, int16_t nAssBlk, int16_t nBlk)
+int32_t B5_Aes256_Update (B5_tAesCtx	*ctx, uint8_t *assData, uint8_t *encData, uint8_t *clrData, int16_t assSize, int16_t nBlk)
 {
     int16_t    i, j, cb;
     uint8_t    tmp[B5_AES_BLK_SIZE];
@@ -1614,13 +1617,13 @@ int32_t B5_Aes256_Update (B5_tAesCtx	*ctx, uint8_t *assData, uint8_t *encData, u
         }
         case B5_AES256_GCM_ENC:
         {
-        	if(aes_gcm_enc(ctx, ctx->InitVector, B5_AES_IV_SIZE, clrData, nBlk*B5_AES_BLK_SIZE, assData, nAssBlk*B5_AES_BLK_SIZE, encData)==-1)
+        	if(aes_gcm_enc(ctx, ctx->InitVector, B5_TLS_AES_IV_SIZE, clrData, nBlk, assData, assSize, encData)==-1)
         		return B5_AES256_RES_INVALID_MODE;
         	break;
         }
         case B5_AES256_GCM_DEC:
         {
-        	if( aes_gcm_dec(ctx, ctx->InitVector, B5_AES_IV_SIZE, encData, nBlk*B5_AES_BLK_SIZE, assData, nAssBlk*B5_AES_BLK_SIZE, clrData)==-1)
+        	if( aes_gcm_dec(ctx, ctx->InitVector, B5_TLS_AES_IV_SIZE, encData, nBlk, assData, assSize, clrData)==-1)
         		return B5_AES256_RES_INVALID_MODE;
         	//gmac(ctx,ctx->InitVector,16,clrData,B5_AES_BLK_SIZE,encData);
             break;

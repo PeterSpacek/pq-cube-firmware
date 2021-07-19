@@ -13,6 +13,23 @@
 #include "sha256.h"
 #include "pbkdf2.h"
 
+#define NUM_OF_TESTS    1
+#define TEST_ID    4
+
+#define DEMCR_TRCENA    0x01000000
+
+/* Core Debug registers */
+#define DEMCR           (*((volatile uint32_t *)0xE000EDFC))
+#define DWT_CTRL        (*(volatile uint32_t *)0xe0001000)
+#define CYCCNTENA       (1<<0)
+#define DWT_CYCCNT      ((volatile uint32_t *)0xE0001004)
+#define CPU_CYCLES      *DWT_CYCCNT
+#define CLK_SPEED         50000000 // EXAMPLE for CortexM4, EDIT as needed
+
+#define STOPWATCH_START { m_nStart = *((volatile unsigned int *)0xE0001004);}
+#define STOPWATCH_STOP  { m_nStop = *((volatile unsigned int *)0xE0001004);}
+
+
 enum {
 	SE3_SESSIONS_BUF = (32*1024),  ///< session buffer size
 	SE3_SESSIONS_MAX = 100  ///< maximum number of sessions
@@ -134,6 +151,13 @@ bool record_set(uint16_t type, const uint8_t* data);
 bool record_get(uint16_t type, uint8_t* data);
 
 // ---- crypto ----
+/** \brief test_implementations handler
+ *
+ *  11
+ *
+ *  Test all kems
+ */
+uint16_t test_implementations(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
 
 /** \brief crypto_kem_keypair handler
  *

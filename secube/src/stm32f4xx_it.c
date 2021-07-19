@@ -50,7 +50,6 @@ extern SD_HandleTypeDef hsd;
 /******************************************************************************/
 /*            Cortex-M4 Processor Interruption and Exception Handlers         */ 
 /******************************************************************************/
-
 /**
 * @brief This function handles System tick timer.
 */

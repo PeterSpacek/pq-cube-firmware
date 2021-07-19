@@ -492,11 +492,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Common/sha256.h</locationURI>
 		</link>
 		<link>
-			<name>Application/src/Device/api.h</name>
-			<type>1</type>
-			<locationURI>PROJECT_LOC/Application/src/Device/pqclean/crypto_kem/firesaber/api.h</locationURI>
-		</link>
-		<link>
 			<name>Application/src/Device/se3_FPGA.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/secube/src/Device/se3_FPGA.c</locationURI>

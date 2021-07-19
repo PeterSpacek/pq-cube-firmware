@@ -34,6 +34,8 @@ SE3_LOGIN_STATUS login_struct;
 /** \brief Security function prototype. */
 typedef uint16_t(*se3_cmd_func)(uint16_t, const uint8_t*, uint16_t*, uint8_t*);
 
+
+uint16_t max_sizes(uint32_t* max_ciphertext_size, uint32_t* max_public_key_size,uint32_t* max_secret_key_size,uint32_t* max_size);
 /** \brief Set or get configuration record from the request buffer. */
 uint16_t config(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, uint8_t* resp);
 
@@ -104,7 +106,7 @@ static se3_cmd_func handlers[SE3_N_HARDWARE][SE3_CMD1_MAX] = {{
     /* 11 */ crypto_kem_keypair,
     /* 12 */ crypto_kem_enc,
     /* 13 */ crypto_kem_dec,
-    /* 14 */ NULL,
+    /* 14 */ test_implementations,
     /* 15 */ error
 }, {
 //FPGA: when developed, the function will have to be added here

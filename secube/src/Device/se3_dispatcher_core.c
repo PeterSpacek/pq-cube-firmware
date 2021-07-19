@@ -354,6 +354,7 @@ uint16_t key_edit(uint16_t req_size, const uint8_t* req, uint16_t* resp_size, ui
             return SE3_ERR_HW;
         }
         break;
+
     case SE3_KEY_OP_UPSERT:
 		equal = false;
         if (NULL != it.addr) {
